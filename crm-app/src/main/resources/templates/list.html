@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<link rel="shortcut icon" href="#">
+<title>asdas</title>
+<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+	<h3 align="center">uek Davelop</h3>
+	<hr color="red">
+	<div style="padding:auto">
+	<p>fafdag</p>
+		<ul style="list-style:none;">
+			<li><img  th:src="@{/image/directory.png}" width="20";hight="20";><a href="#" >corejava</a></li>
+			<li><img  th:src="@{/image/directory.png}" width="20";hight="20";><a href="#" >2</a></li>
+			<li><img  th:src="@{/image/directory.png}" width="20";hight="20";><a href="#" >java</a></li>
+			<li><img  th:src="@{/image/directory.png}" width="20";hight="20";><a href="#" >3</a></li>
+			<li><img  th:src="@{/image/directory.png}" width="20";hight="20";><a href="#" >8</a></li>
+			<li><img  th:src="@{/image/directory.png}" width="20";hight="20";><a href="#" >4</a></li>
+			<li><img  th:src="@{/image/directory.png}" width="20";hight="20";><a href="#" >c6</a></li>
+		</ul>
+	</div>
+	<script type="text/javascript">
+		$("li").click(function(){
+			
+			var aa=$(this).find("a").text().trim();
+			//--发送Ajax请求
+			$.get('/crm/list'+durectory,function(data){
+				alert()
+			})
+			var ff="<ul><p>ffff</p>"+
+				"<li>dddd</li>"+
+				"</ul>";
+				
+			$(this).find("ul").append(ff);
+			
+		})			
+	</script>
+	
+</body>
+</html>

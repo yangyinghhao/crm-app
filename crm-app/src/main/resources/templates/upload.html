@@ -1,0 +1,44 @@
+	<!DOCTYPE html>
+	<html lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+		<head>
+			<meta charset="utf-8">
+			<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+			<title>Files UpLoad</title>
+		</head>
+	<body>
+		<div id="uploadForm">
+			<!-- multiple属性定义该文件框可以输入多个值 -->
+			<input id="file" type="file" multiple="multiple">
+			<button id="upload" type="button" onclick="upload();">上传</button>
+			
+		</div>
+		<script type="text/javascript">
+			var length;
+			$('#file').change(function(){
+				length = this.files.length;
+				console.log(length);
+			});
+			function upload(){
+				var formData = new FormData();
+				for(let i=0;i<length;i++){
+					formData.append('file',$('#file')[0].files[i]);
+				}
+				console.log(formData.getAll("file"));
+				$.ajax({
+					url:"http:8080/crm/toupload",
+					type:'post',
+					data:formData,
+					processData:false,
+					contentType:false,
+					success:function(data){
+						alert(data);
+					},
+					error:function(res){
+						alert('upload failure');
+					}
+				});
+			}
+			
+		</script>
+	</body>
+	</html>

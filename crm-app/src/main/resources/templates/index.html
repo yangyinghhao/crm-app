@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<link rel="shortcut icon" href="#">
+<title>asdas</title>
+<script src="./static/js/test.js " th:src="@{/js/test.js}"></script>
+<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+<link rel="stylesheet" href="./Static/css/test.css"
+	th:href="@{/css/test.css}">
+</head>
+
+<body>
+	<div th:text="${msg}">hello</div>
+	<div class="one" style="display: black">
+		<table border="1" style="margin: auto">
+			<tr>
+				<th>id</th>
+				<th>产品名称</th>
+				<th>单价</th>
+				<th>订单管理</th>
+			</tr>
+			<tr th:each="product: ${products}">
+				<td th:text="${product.id}" class="one-one-one">1</td>
+				<td th:text="${product.name}" class="one-two-one">杯子</td>
+				<td th:text="${#numbers.formatDecimal(product.price, 1, 2)}"
+					class="one-three-one">2.5</td>
+				<td>
+					<button class="submit">修改</button>
+					<button class="sad">删除</button>
+				</td>
+
+			</tr>
+			<tr>
+
+
+
+			</tr>
+		</table>
+		<div style="margin-left: 800px;">
+			<button class="home">首页</button>
+			<button class="Previous">上一页</button>
+			<input th:value="${page}" class="instantly01" style="width:20px" value="1">
+			<button class="instantly">跳转</button>
+			<button class="under">下一页</button>
+			<button class="End">末页</button>
+			
+		</div>
+		<div>
+			产品名称<input type="text" class="one-two">
+		</div>
+		<div>
+			单价<input type="text" class="one-three">
+		</div>
+		<div>
+			<button class="bobo">提交</button>
+		</div>
+	</div>
+	<div class="two" style="display: none">
+		<div>id</div>
+		<input class="one-one-one"><br>
+		<div>产品名称</div>
+		<input type="text" class="one-two-two"><br>
+		<div>单价</div>
+		<input type="text" class="one-three-two"><br>
+
+		
+		<button class="asdas">提交</button>
+	</div>
+
+	<script>
+		
+		var key=parseInt($(".instantly01").val());
+		alert("http://localhost:8080/crm/index?page="+(key-1));
+		$(".home").click(function() {
+			
+			window.location.href="http://localhost:8080/crm/index?page="+1;
+			});
+	 	$(".Previous").click(function() {
+	 		
+	 		window.location.href="http://localhost:8080/crm/index?page="+(key-1);
+		}); 
+	 	
+		$(".instantly").click(function() {
+			key=parseInt($(".instantly01").val());
+			window.location.href="http://localhost:8080/crm/index?page="+key;
+		});
+		
+		$(".under").click(function() {
+			window.location.href="http://localhost:8080/crm/index?page="+(key+1);
+		});
+		
+ 		$(".End").click(function() {
+ 			window.location.href="http://localhost:8080/crm/index?page="+(max-1);
+		});
+		  
+		$(".asdas").click(function() {
+			alert($(".one-two-two").val());
+			var zhege=$(this)
+			$.ajax({
+				type : "post",
+				url : "http://localhost:8080/crm/select",
+				dataType : 'json',
+				data : {
+					"name" : ($(".one-two-two").val()),
+					"price" : ($(".one-three-two").val()),
+					"id":($(".one-one-one").val())
+				},
+				success : function(data) {
+					
+					$(".one").css("display","block");
+			        $(".two").css("display","none");
+			        window.location.reload();
+				}
+		}); 
+	});
+		$(".submit").click(function() {
+			var zhege=$(this)
+			$.ajax({
+				type : "post",
+				url : "http://localhost:8080/crm/selectpro",
+				dataType : 'json',
+				data : {
+					"id":parseInt($(this).parent().parent().find(".one-one-one").text())
+					
+					},success : function(data) {
+					$(".one").css("display","none");
+			        $(".two").css("display","block");
+			        $(".one-one-one").val(parseInt(zhege.parent().parent().find(".one-one-one").text()));
+			        $(".one-two-two").val(zhege.parent().parent().find(".one-two-one").text());
+					$(".one-three-two").val(zhege.parent().parent().find(".one-three-one").text());
+				}
+			}); 
+		});
+	 	$(".sad").click(function() {
+			
+		alert(parseInt($(this).parent().parent().find(".one-one-one").text()));
+			$.ajax({
+				type : "post",
+				url : "http://localhost:8080/crm/delete",
+				dataType : 'json',
+				data : {
+					"id":parseInt($(this).parent().parent().find(".one-one-one").text())
+					
+				},success : function(data) {
+					window.location.reload();
+				}
+			}); 
+		}); 
+	 	
+		$(".bobo").click(function() {
+			$.ajax({
+				type : "post",
+				url : "http://localhost:8080/crm/saveproduct",
+				dataType : 'json',
+				data : {
+					"name" : ($(".one-two").val()),
+					"price" : ($(".one-three").val())
+				},
+				success : function(data) {
+					$(".one-two-one").val($(".one-two").val());
+					$(".one-three-one").val($(".one-three").val());
+					window.location.reload();
+				}
+			});
+		});
+		
+	</script>
+
+</body>
+</html>

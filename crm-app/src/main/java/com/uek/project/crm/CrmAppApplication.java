@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class CrmAppApplication {
 	
 	public static void main(String[] args) {
+		
 		SpringApplication.run(CrmAppApplication.class, args);
 	}
 
