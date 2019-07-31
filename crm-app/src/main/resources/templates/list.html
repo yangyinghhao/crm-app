@@ -12,30 +12,33 @@
 	<div style="padding:auto">
 	<p>fafdag</p>
 		<ul style="list-style:none;">
-			<li><img  th:src="@{/image/directory.png}" width="20";hight="20";><a href="#" >corejava</a></li>
-			<li><img  th:src="@{/image/directory.png}" width="20";hight="20";><a href="#" >2</a></li>
-			<li><img  th:src="@{/image/directory.png}" width="20";hight="20";><a href="#" >java</a></li>
-			<li><img  th:src="@{/image/directory.png}" width="20";hight="20";><a href="#" >3</a></li>
-			<li><img  th:src="@{/image/directory.png}" width="20";hight="20";><a href="#" >8</a></li>
-			<li><img  th:src="@{/image/directory.png}" width="20";hight="20";><a href="#" >4</a></li>
-			<li><img  th:src="@{/image/directory.png}" width="20";hight="20";><a href="#" >c6</a></li>
+			<li th:eash="category :${categories}">
+			<img  th:src="@{/image/directory.png}" width="20"; hight="20";>
+			<a href="#" class="category" th:text="${catecory}">corejava</a>
+			</li>
+			
 		</ul>
 	</div>
 	<script type="text/javascript">
-		$("li").click(function(){
+		$(".catecory").click(function(){
 			
-			var aa=$(this).find("a").text().trim();
+			
+			var directory=$(this).text().trim();
 			//--发送Ajax请求
-			$.get('/crm/list'+durectory,function(data){
-				alert()
-			})
-			var ff="<ul><p>ffff</p>"+
-				"<li>dddd</li>"+
-				"</ul>";
-				
-			$(this).find("ul").append(ff);
+			var that =$(this).parent();
+			$.get('/crm/list'+directory,function(data){
+				var jo =$.parseJSON(data);
+				that.find("ul").remove();
+				let hemlCode="<ul style='list-style:nane'>";
+				for(var i in jo['files']){
+					htmlCode +="<li><a href ='#'>" +jo['files'][i]+"</a></li>"
+				}
+				htmlCode += "</ul>";
+				that.append(htmlCode);
+			});
 			
-		})			
+			
+		});			
 	</script>
 	
 </body>

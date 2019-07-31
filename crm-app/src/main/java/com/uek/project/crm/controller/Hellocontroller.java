@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.uek.project.crm.dao.ProductDao;
@@ -154,13 +155,30 @@ public class Hellocontroller {
 //        }
 //    }
 	@GetMapping("/list")
-	public String  list(){
-		return "list";
+	public ModelAndView  list(){
+		ModelAndView mv =new ModelAndView();
+		File allcat =new File("D:/upload");
+		String [] ac =allcat.list();
+		mv.addObject("categories",ac);
+		mv.setViewName("list");
+		return mv;
 	}
-	@GetMapping("/list/{category}")
 	@ResponseBody
 	public String list(@PathVariable String category){
+		File cf =new File("D:/upload/"+category);
+		String [] files =cf.list();
+		
+		//--获取所有的分类
+		File allCat =new File("D:/upload");
+		String [] ac =allCat.list();
+		
+		JSONObject jsonObject =new JSONObject();
+		
+		jsonObject.put("categories", ac);
+		jsonObject.put("files", files);
 		return "success";
 	}
+	
+	
 	
 }
