@@ -5,6 +5,12 @@
 <link rel="shortcut icon" href="#">
 <title>asdas</title>
 <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+<style type="text/css">
+	img{
+		width:20px;
+		hight:20px;
+	}
+</style>
 </head>
 <body>
 	<h3 align="center">uek Davelop</h3>
@@ -12,25 +18,32 @@
 	<div style="padding:auto">
 	<p>fafdag</p>
 		<ul style="list-style:none;">
-			<li th:eash="category :${categories}">
-			<img  th:src="@{/image/directory.png}" width="20"; hight="20";>
-			<a href="#" class="category" th:text="${catecory}">corejava</a>
+			<li th:each="category :${categories}">
+			<img  th:src="@{/image/directory.png}" >
+			<a href="#" class="category" th:text="${category}">corejava</a>
 			</li>
 			
 		</ul>
 	</div>
 	<script type="text/javascript">
-		$(".catecory").click(function(){
+		$(".category").click(function(){
 			
-			
+			alert(1);
 			var directory=$(this).text().trim();
+			alert(2);
 			//--发送Ajax请求
 			var that =$(this).parent();
+			alert(3);
 			$.get('/crm/list'+directory,function(data){
+				alert(4);
 				var jo =$.parseJSON(data);
+				alert(5);
 				that.find("ul").remove();
-				let hemlCode="<ul style='list-style:nane'>";
+				alert(6);
+				let htmlCode="<ul style='list-style:nane'>";
+				alert(7);
 				for(var i in jo['files']){
+				
 					htmlCode +="<li><a href ='#'>" +jo['files'][i]+"</a></li>"
 				}
 				htmlCode += "</ul>";
