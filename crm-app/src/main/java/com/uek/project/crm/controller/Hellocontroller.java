@@ -1,7 +1,12 @@
 package com.uek.project.crm.controller;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -93,66 +98,33 @@ public class Hellocontroller {
 		return "{\"0\":0}";
 	}
 
-	@GetMapping("/toupload")
-	public String toUpload() {
-		return "upload";
+	@GetMapping("toupload")
+	public ModelAndView toUpload() {
+		ModelAndView mv = new ModelAndView();
+		// -- 获取所有的分类
+		File allCat = new File("D:/upload/");
+		String[] ac = allCat.list();
+		mv.addObject("categories", ac);
+		mv.setViewName("upload");
+		return mv;
+	
 	}
 
-	@PostMapping("/toupload")
+	@PostMapping("/upload")
 	@ResponseBody
-	public String up(@RequestParam("file") MultipartFile[] files) throws Exception {
+	public String uploadFile(String apple,@RequestParam("file") MultipartFile[] files) throws Exception {
+		System.out.println(files);
 		for (MultipartFile file : files) {
-			file.transferTo(new File("D:/aaa/" + file.getOriginalFilename()));
+			File f = new File("D:/upload/"+apple+"/"+ file.getOriginalFilename());
+			if (!f.getParentFile().exists()) {
+				f.getParentFile().mkdirs();
+			}
+			file.transferTo(f);
 		}
 		return "{'upload':'ok'}";
 	}
 
-	// @RequestMapping(value="/download",method = RequestMethod.GET)
-	// public void download( HttpServletResponse response){
-	// //要上传的文件名字
-	// String fileName="com.seven.xuanshang.apk";
-	// //通过文件的保存文件夹路径加上文件的名字来获得文件
-	// File file=new File(FILE_DIR,fileName);
-	// //当文件存在
-	// if(file.exists()){
-	// //首先设置响应的内容格式是force-download，那么你一旦点击下载按钮就会自动下载文件了
-	// response.setContentType("application/force-download");
-	// //通过设置头信息给文件命名，也即是，在前端，文件流被接受完还原成原文件的时候会以你传递的文件名来命名
-	// response.addHeader("Content-Disposition",String.format("attachment;
-	// filename=\"%s\"", file.getName()));
-	// //进行读写操作
-	// byte[]buffer=new byte[1024];
-	// FileInputStream fis=null;
-	// BufferedInputStream bis=null;
-	// try{
-	// fis=new FileInputStream(file);
-	// bis=new BufferedInputStream(fis);
-	// OutputStream os=response.getOutputStream();
-	// //从源文件中读
-	// int i=bis.read(buffer);
-	// while(i!=-1){
-	// //写到response的输出流中
-	// os.write(buffer,0,i);
-	// i=bis.read(buffer);
-	// }
-	// }catch (IOException e){
-	// e.printStackTrace();
-	// }finally {
-	// //善后工作，关闭各种流
-	// try {
-	// if(bis!=null){
-	// bis.close();
-	// }
-	// if(fis!=null){
-	// fis.close();
-	// }
-	// } catch (IOException e) {
-	// e.printStackTrace();
-	// }
-	// }
-	//
-	// }
-	// }
+
 	@GetMapping("/list")
 	public ModelAndView list() {
 
@@ -168,21 +140,43 @@ public class Hellocontroller {
 
 		return mv;
 	}
-
+	@GetMapping("/list/{category}")
 	@ResponseBody
 	public String list(@PathVariable String category) {
 		File cf = new File("D:/upload/" + category);
 		String[] files = cf.list();
 
 		// --获取所有的分类
-		File allCat = new File("D:/upload");
-		String[] ac = allCat.list();
+		
+		
 
 		JSONObject jsonObject = new JSONObject();
 
-		jsonObject.put("categories", ac);
+		
 		jsonObject.put("files", files);
 		return jsonObject.toJSONString();
 	}
+	@GetMapping("/download/{category}/{file}")
+	public void download(@PathVariable("category") String category, @PathVariable("file") String file,
+			HttpServletResponse response) throws Exception {
+		File f = new File("D:/upload/" + category + "/" + file);
+		//-- 设置响应类型
+		response.setContentType("application/force-dowmload");
+		//-- 设置响应文件名
+		response.addHeader("Content-Disposition", "attachment;fileName="+f.getName());
+		// -- 文件输入流对象
+		FileInputStream fis = new FileInputStream(f);
+		// -- 文件缓存流对象
+		BufferedInputStream bis = new BufferedInputStream(fis);
+		// -- 文件输出流对象
+		OutputStream os = response.getOutputStream();
+		byte[] buffer = new byte[1024];
+		int len = 0;
+		while ((len = bis.read(buffer)) != -1) {
+			os.write(buffer, 0, len);
+		}
+		bis.close();
+		fis.close();
 
+	}
 }
