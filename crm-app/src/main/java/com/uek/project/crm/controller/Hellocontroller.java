@@ -1,4 +1,4 @@
-package com.uek.project.crm.controller;
+ package com.uek.project.crm.controller;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -50,7 +50,7 @@ public class Hellocontroller {
 		ModelAndView mv = new ModelAndView();
 		System.out.println(page);
 		PageHelper.startPage(page, 5);
-		List<Product> products = productService.getAllProducts();
+		List<Product> products = productService.getproducts(page, 5);
 		// mv.addObject(attributeValue)
 		mv.addObject("page", page);// 添加到html标签
 		mv.addObject("products", products);
